@@ -1,19 +1,17 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { ShoppingCart, Send, ShoppingBag, Plus, Minus, X, Search, ArrowRight, Clock, Grid, Sparkles, LayoutGrid, HelpCircle, CheckCircle, Store, Truck, Mic, Leaf, ChefHat, MapPin, Scale } from 'lucide-react';
+import { ShoppingCart, Send, ShoppingBag, Plus, Minus, X, Search, ArrowRight, Clock, Grid, Sparkles, LayoutGrid, HelpCircle, CheckCircle, Store, Truck, Mic, Leaf, ChefHat, MapPin, Scale, Users } from 'lucide-react';
 import { CartProvider, useCart } from './context/CartContext';
 import { useChatLogic } from './hooks/useChatLogic';
 import { PRODUCT_DB, CATEGORIES } from './data/mockData';
 import SafeImage from './components/ui/SafeImage';
 import ProductCard from './components/widgets/ProductCard';
 import DashboardWidget from './components/widgets/DashboardWidget';
-// --- IMPORT LOGO ---
-import logo from './assets/cosmocartt_logo.png';
-import { User, Users } from 'lucide-react';
+import logo from './assets/logo.png';
 
 // --- STYLES ---
 const FontStyles = () => (
   <style>{`@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-    body { font-family: 'Inter', sans-serif; background-color: #f3e8ff; margin: 0; } /* Light purple bg */
+    body { font-family: 'Inter', sans-serif; background-color: #f3e8ff; margin: 0; }
     .scrollbar-hide::-webkit-scrollbar { display: none; }
     .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
     @keyframes slide-up { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
@@ -40,7 +38,6 @@ const MapWidget = ({ data }) => (
             <span className="text-xs font-bold text-purple-700 bg-purple-200 px-2 py-0.5 rounded">{data.aisle}</span>
         </div>
         <div className="h-40 bg-white rounded-lg border border-purple-100 relative flex items-center justify-center overflow-hidden">
-            {/* SVG Store Layout Representation */}
             <svg viewBox="0 0 200 100" className="w-full h-full opacity-20">
                 <rect x="10" y="10" width="30" height="80" fill="#6b21a8" rx="2"/>
                 <rect x="50" y="10" width="30" height="80" fill="#6b21a8" rx="2"/>
@@ -89,8 +86,9 @@ const ComparisonWidget = ({ products }) => (
     </div>
 );
 
-// --- 3. NEW WIDGET: RECIPE CARD ---
+// --- 3. NEW WIDGET: SMART RECIPE CARD (FIXED) ---
 const RecipeCard = ({ recipe, onAdd }) => {
+    // RESTORED: Smart Serving Logic
     const [servings, setServings] = useState(recipe.baseServings || 2);
 
     const handleServingChange = (delta) => {
@@ -111,7 +109,7 @@ const RecipeCard = ({ recipe, onAdd }) => {
                     <span className="flex items-center gap-1"><Sparkles size={12} className="text-fuchsia-500"/> {parseInt(recipe.calories)*servings} kcal</span>
                 </div>
 
-                {/* Servings Control - NEW FEATURE */}
+                {/* RESTORED: Servings Control */}
                 <div className="flex items-center justify-between mb-4 bg-slate-50 rounded-lg p-2 border border-slate-100">
                     <span className="text-xs font-bold text-slate-500 uppercase flex items-center gap-1"><Users size={12}/> Servings</span>
                     <div className="flex items-center gap-3">
@@ -121,6 +119,7 @@ const RecipeCard = ({ recipe, onAdd }) => {
                     </div>
                 </div>
 
+                {/* Fixed Ingredients Display */}
                 <p className="text-[11px] text-slate-500 mb-4 line-clamp-2 h-8">
                     <span className="font-bold text-purple-900">Items:</span> {recipe.ingredients.map(i => i.searchTerm).join(', ')}
                 </p>
@@ -190,7 +189,7 @@ const OrderSummaryCard = ({ data, onConfirm, onAbort }) => {
                             <tr key={idx} className="hover:bg-purple-50/50 transition-colors">
                                 <td className="py-3 px-4 font-semibold text-slate-800">{item.name}</td>
                                 <td className="py-3 px-4 text-slate-600 font-medium">
-                                    <span className="bg-slate-100 px-2 py-0.5 rounded text-xs border border-slate-200">{item.selectedWeight || 'Std'}</span>
+                                    <span className="bg-slate-100 px-2 py-0.5 rounded text-xs border border-slate-200">{item.unit || 'Std'}</span>
                                 </td>
                                 <td className="py-3 px-4 text-center font-bold text-purple-900">{item.quantity}</td>
                                 <td className="py-3 px-4 text-right font-bold text-purple-700">₹{(item.price * item.quantity).toLocaleString()}</td>
@@ -227,11 +226,10 @@ const OrderPreviewTable = ({ initialItems, onConfirm }) => {
         setItems(prev => prev.map(item => {
             if (item.id === id) {
                 let multiplier = 1;
-                if (newWeight.includes('500')) multiplier = 0.55;
-                if (newWeight.includes('250')) multiplier = 0.30;
-                const newSellingPrice = Math.floor(item.perUnitSellingPrice * multiplier);
-                const newOriginalPrice = Math.floor(item.perUnitOriginalPrice * multiplier);
-                return { ...item, selectedWeight: newWeight, price: newSellingPrice, originalPrice: newOriginalPrice };
+                if (newWeight.includes('250')) multiplier = 0.25;
+                if (newWeight.includes('500')) multiplier = 0.50;
+                const newSellingPrice = Math.floor(item.perUnitSellingPrice * multiplier) || item.price; 
+                return { ...item, unit: newWeight, price: newSellingPrice };
             }
             return item;
         }));
@@ -239,8 +237,9 @@ const OrderPreviewTable = ({ initialItems, onConfirm }) => {
     const totalCost = items.reduce((acc, item) => acc + (item.price * (item.quantity || 0)), 0);
     const totalCount = items.reduce((acc, item) => acc + (item.quantity || 0), 0);
     
+    // Helper to render weight pills based on item type
     const WeightPill = ({ item, val, label }) => (
-        <button onClick={() => handleWeightChange(item.id, val)} className={`px-2 py-1 rounded text-[10px] font-bold transition-all border ${item.selectedWeight === val ? 'bg-white text-purple-700 border-purple-200 shadow-sm' : 'text-slate-400 border-transparent hover:text-purple-600'}`}>{label}</button>
+        <button onClick={() => handleWeightChange(item.id, val)} className={`px-2 py-1 rounded text-[10px] font-bold transition-all border ${item.unit === val ? 'bg-white text-purple-700 border-purple-200 shadow-sm' : 'text-slate-400 border-transparent hover:text-purple-600'}`}>{label}</button>
     );
 
     return (
@@ -253,15 +252,8 @@ const OrderPreviewTable = ({ initialItems, onConfirm }) => {
                         <div className="flex-1 min-w-0 flex flex-col gap-1.5">
                             <div className="flex justify-between items-start">
                                 <div><p className="text-xs font-bold text-purple-400 uppercase">{item.brand}</p><p className="text-sm font-bold text-slate-900 truncate w-32">{item.baseName}</p></div>
-                                {(item.unitType === 'kg' || item.unitType === 'l') && (
-                                    <div className="flex bg-slate-50 rounded-lg p-0.5 border border-purple-100">
-                                        <WeightPill item={item} val={item.unitType === 'kg' ? '250g' : '250ml'} label="250" />
-                                        <WeightPill item={item} val={item.unitType === 'kg' ? '500g' : '500ml'} label="500" />
-                                        <WeightPill item={item} val={item.unitType === 'kg' ? '1kg' : '1L'} label={item.unitType === 'kg' ? '1kg' : '1L'} />
-                                    </div>
-                                )}
                             </div>
-                            <div className="flex items-center gap-2"><span className="text-sm font-bold text-purple-900">₹{item.price}</span>{item.discount > 0 && <span className="text-xs text-slate-400 line-through">₹{item.originalPrice}</span>}</div>
+                            <div className="flex items-center gap-2"><span className="text-sm font-bold text-purple-900">₹{item.price}</span><span className="text-[10px] text-slate-400">/ {item.unit}</span></div>
                         </div>
                         <div className="flex items-center gap-2 bg-purple-50 rounded-lg p-1">
                             <button onClick={() => handleQty(item.id, -1)} className="w-7 h-7 flex items-center justify-center bg-white rounded border border-purple-200 shadow-sm hover:text-red-600 disabled:opacity-50"><Minus size={14}/></button>
@@ -303,17 +295,15 @@ const LoginScreen = ({ onLogin }) => {
     <div className="flex-1 flex flex-col items-center justify-center bg-purple-50 relative">
       <div className="w-full max-w-md bg-white p-10 rounded-2xl shadow-xl border border-purple-100">
         <div className="mb-8 text-center">
-            {/* LOGO REPLACEMENT */}
             <img src={logo} alt="CosmoCart Logo" className="w-56 mx-auto mb-4 drop-shadow-lg" />
             <h1 className="text-xl font-bold text-purple-900 tracking-tight hidden">CosmoCart</h1>
             <p className="text-purple-500 mt-2 font-medium">Please authenticate to continue</p>
         </div>
         <div className="space-y-5">
-            <input className="w-full bg-purple-50 border border-purple-200 p-4 rounded-lg outline-none focus:border-purple-600 font-semibold text-purple-900 placeholder:text-purple-300" placeholder="First Name (e.g. Sarah)" value={name} onChange={e => setName(e.target.value)} />
-            <input className="w-full bg-purple-50 border border-purple-200 p-4 rounded-lg outline-none focus:border-purple-600 font-semibold text-purple-900 placeholder:text-purple-300" placeholder="Member ID (e.g. 101)" value={id} onChange={e => setId(e.target.value)} />
+            <input className="w-full bg-purple-50 border border-purple-200 p-4 rounded-lg outline-none focus:border-purple-600 font-semibold text-purple-900 placeholder:text-purple-300" placeholder="Full Name" value={name} onChange={e => setName(e.target.value)} />
+            <input className="w-full bg-purple-50 border border-purple-200 p-4 rounded-lg outline-none focus:border-purple-600 font-semibold text-purple-900 placeholder:text-purple-300" placeholder="Password" value={id} onChange={e => setId(e.target.value)} />
             <button onClick={() => onLogin(name, id)} className="w-full py-4 bg-purple-900 text-white rounded-lg font-bold text-lg shadow-lg hover:bg-purple-950 transition-all flex items-center justify-center gap-2">Access Dashboard <ArrowRight size={20} /></button>
         </div>
-        <div className="mt-8 pt-6 border-t border-purple-100 flex justify-center"><span className="px-3 py-1 bg-purple-100 rounded text-xs font-mono text-purple-500 font-medium">DEMO: Sarah / 101</span></div>
       </div>
     </div>
   );
@@ -336,7 +326,6 @@ const ChatView = ({ user, onLogout }) => {
     <>
       <header className="px-6 h-20 border-b border-purple-100 flex justify-between items-center bg-white sticky top-0 z-30 shadow-sm">
         <div className="flex items-center gap-4">
-            {/* LOGO REPLACEMENT IN HEADER */}
             <img src={logo} alt="CosmoCart" className="h-10 w-auto object-contain" />
             <div>
                 <button onClick={() => setDietMode(dietMode === 'all' ? 'veg' : 'all')} className={`text-[10px] font-bold px-2 py-0.5 rounded-full flex items-center gap-1 transition-all ${dietMode === 'veg' ? 'bg-green-100 text-green-700 border border-green-200' : 'bg-purple-100 text-purple-500'}`}><Leaf size={10}/> {dietMode === 'veg' ? 'VEG ONLY' : 'ALL ITEMS'}</button>
@@ -365,6 +354,7 @@ const ChatView = ({ user, onLogout }) => {
               {msg.type === 'comparison_card' && <ComparisonWidget products={msg.data} />}
               {msg.type === 'order_preview' && <OrderPreviewTable initialItems={msg.data} onConfirm={handleTableConfirm} />}
               {msg.type === 'order_summary' && <OrderSummaryCard data={msg.data} onConfirm={() => handleOptionSelect({ id: 'confirm_order', label: 'Confirming...' })} onAbort={() => handleOptionSelect({ id: 'abort_order', label: 'Edit Order' })} />}
+              {/* FIXED RECIPE CARD */}
               {msg.type === 'recipe_list' && <div className="mt-4 w-full flex gap-4 overflow-x-auto pb-4 px-1 scrollbar-hide">{msg.data.map(recipe => <RecipeCard key={recipe.id} recipe={recipe} onAdd={handleRecipeAdd} />)}</div>}
               {msg.type === 'options' && <div className="flex flex-wrap gap-2 mt-3">{msg.data.map(opt => <button key={opt.id} onClick={() => handleOptionSelect(opt)} className="px-6 py-3 bg-white border-2 border-purple-100 rounded-xl text-sm font-bold text-purple-800 hover:border-purple-600 hover:text-purple-900 hover:shadow-md transition-all active:scale-[0.98]">{opt.label}</button>)}</div>}
               {msg.type === 'carousel' && <div className="mt-4 w-full flex gap-4 overflow-x-auto pb-4 px-1 scrollbar-hide">{msg.data.map(p => <ProductCard key={p.id} product={p} />)}</div>}
@@ -411,7 +401,7 @@ const ChatView = ({ user, onLogout }) => {
                         <div key={`${item.id}-${item.selectedWeight}`} className="flex gap-4 p-3 border border-purple-100 rounded-xl hover:border-purple-300 transition-colors bg-white shadow-sm">
                             <SafeImage src={item.image} className="w-20 h-20 rounded-lg object-cover bg-purple-50 border border-purple-100"/>
                             <div className="flex-1 flex flex-col justify-between py-1">
-                                <div><p className="font-bold text-purple-900">{item.name} <span className="text-xs text-purple-400">({item.selectedWeight || 'Std'})</span></p><p className="text-sm font-semibold text-purple-500">Unit: ₹{item.price}</p></div>
+                                <div><p className="font-bold text-purple-900">{item.name} <span className="text-xs text-purple-400">({item.unit || 'Std'})</span></p><p className="text-sm font-semibold text-purple-500">Unit: ₹{item.price}</p></div>
                                 <div className="flex items-center gap-3">
                                     <button onClick={() => updateQuantity(item, (item.quantity||1)-1)} className="w-8 h-8 rounded-lg border border-purple-200 flex items-center justify-center hover:bg-purple-50 hover:border-purple-300 transition-colors"><Minus size={14}/></button>
                                     <span className="font-bold w-6 text-center text-purple-900">{item.quantity}</span>

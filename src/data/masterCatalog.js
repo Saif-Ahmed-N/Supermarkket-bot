@@ -16,7 +16,7 @@ const BRANDS = {
 
 const ADJECTIVES = ['Premium', 'Classic', 'Fresh', 'Pure', 'Natural', 'Organic', 'Creamy', 'Homestyle', 'Original', 'Rich', 'Healthy', 'Tasty'];
 
-// --- 2. IMAGE LIBRARY (REAL PHOTOS) ---
+// --- 2. IMAGE LIBRARY ---
 const IMAGE_LIBRARY = {
     dairy: [
         'https://images.unsplash.com/photo-1635436322965-48296b5a8c29?w=500&q=80', // Milk
@@ -61,107 +61,110 @@ const IMAGE_LIBRARY = {
     ]
 };
 
+// --- 3. UNIT VARIANTS ---
+// This defines how we split items into weights
+const VARIANTS = {
+    // For Fruit, Veg, Rice, Dal, etc.
+    WEIGHT: [
+        { label: '250g', multiplier: 0.25 },
+        { label: '500g', multiplier: 0.5 },
+        { label: '1kg', multiplier: 1.0 }
+    ],
+    // For Milk, Juice, Oil, Shampoo, etc.
+    VOLUME: [
+        { label: '250ml', multiplier: 0.25 },
+        { label: '500ml', multiplier: 0.5 },
+        { label: '1L', multiplier: 1.0 }
+    ],
+    // For Bread, Eggs, Soap (Single units)
+    UNIT: [
+        { label: '1 Pack', multiplier: 1.0 }
+    ]
+};
+
+// --- 4. CORE ITEMS (With Variant Types) ---
 const BASE_ITEMS = {
     dairy: [
-        { name: 'Whole Milk', price: 60, unit: '1L', tags: ['milk'] },
-        { name: 'Salted Butter', price: 55, unit: '100g', tags: ['butter', 'toast'] },
-        { name: 'Cheese Slices', price: 120, unit: '200g', tags: ['cheese', 'burger'] },
-        { name: 'Paneer Block', price: 90, unit: '200g', tags: ['paneer', 'curry'] },
-        { name: 'Greek Yogurt', price: 70, unit: '100g', tags: ['yogurt'] },
-        { name: 'Low Fat Curd', price: 40, unit: '400g', tags: ['curd'] }
+        { name: 'Whole Milk', price: 60, type: 'VOLUME', tags: ['milk'] }, // Price is per 1L
+        { name: 'Salted Butter', price: 550, type: 'WEIGHT', tags: ['butter', 'toast'] }, // Price is per 1kg
+        { name: 'Cheese Block', price: 600, type: 'WEIGHT', tags: ['cheese', 'burger'] },
+        { name: 'Paneer Block', price: 450, type: 'WEIGHT', tags: ['paneer', 'curry'] },
+        { name: 'Greek Yogurt', price: 300, type: 'WEIGHT', tags: ['yogurt'] },
     ],
     produce: [
-        { name: 'Red Apples', price: 150, unit: '1kg', tags: ['fruit', 'apple'] },
-        { name: 'Robusta Bananas', price: 40, unit: '1kg', tags: ['fruit', 'banana'] },
-        { name: 'New Potatoes', price: 30, unit: '1kg', tags: ['veg', 'potato'] },
-        { name: 'Red Onions', price: 35, unit: '1kg', tags: ['veg', 'onion'] },
-        { name: 'Roma Tomatoes', price: 40, unit: '1kg', tags: ['veg', 'tomato'] },
-        { name: 'Fresh Spinach', price: 25, unit: '1kg', tags: ['veg'] },
-        { name: 'Green Cucumber', price: 30, unit: '1kg', tags: ['veg'] },
-        { name: 'Ripe Avocados', price: 250, unit: '1pc', tags: ['fruit'] }
+        { name: 'Red Apples', price: 150, type: 'WEIGHT', tags: ['fruit', 'apple'] },
+        { name: 'Robusta Bananas', price: 60, type: 'WEIGHT', tags: ['fruit', 'banana'] },
+        { name: 'New Potatoes', price: 40, type: 'WEIGHT', tags: ['veg', 'potato'] },
+        { name: 'Red Onions', price: 50, type: 'WEIGHT', tags: ['veg', 'onion'] },
+        { name: 'Roma Tomatoes', price: 60, type: 'WEIGHT', tags: ['veg', 'tomato'] },
+        { name: 'Fresh Spinach', price: 80, type: 'WEIGHT', tags: ['veg'] },
     ],
     pantry: [
-        { name: 'Basmati Rice', price: 140, unit: '1kg', tags: ['rice'] },
-        { name: 'Extra Virgin Olive Oil', price: 600, unit: '1L', tags: ['oil'] },
-        { name: 'Tomato Ketchup', price: 90, unit: '500g', tags: ['sauce'] },
-        { name: 'Pasta Penne', price: 120, unit: '500g', tags: ['pasta'] },
-        { name: 'Turmeric Powder', price: 200, unit: '100g', tags: ['spice'] },
-        { name: 'Red Kidney Beans', price: 110, unit: '1kg', tags: ['dal'] }
+        { name: 'Basmati Rice', price: 140, type: 'WEIGHT', tags: ['rice'] },
+        { name: 'Olive Oil', price: 900, type: 'VOLUME', tags: ['oil'] }, // Price per 1L
+        { name: 'Ketchup', price: 200, type: 'WEIGHT', tags: ['sauce'] },
+        { name: 'Pasta Penne', price: 300, type: 'WEIGHT', tags: ['pasta'] },
+        { name: 'Red Kidney Beans', price: 120, type: 'WEIGHT', tags: ['dal'] }
     ],
-    bakery: [{ name: 'Sliced Bread', price: 40, unit: '1pc', tags: ['bread'] }],
-    snacks: [{ name: 'Salted Chips', price: 20, unit: '100g', tags: ['chips'] }],
-    beverages: [{ name: 'Fizz Drink', price: 40, unit: '750ml', tags: ['soda'] }],
-    personal: [{ name: 'Soap Bar', price: 35, unit: '1pc', tags: ['soap'] }]
+    bakery: [
+        { name: 'Sliced Bread', price: 45, type: 'UNIT', tags: ['bread'] },
+        { name: 'Burger Buns', price: 40, type: 'UNIT', tags: ['bread'] }
+    ],
+    beverages: [
+        { name: 'Cola', price: 60, type: 'VOLUME', tags: ['soda'] }, // Price per 1L
+        { name: 'Orange Juice', price: 120, type: 'VOLUME', tags: ['juice'] },
+    ],
+    personal: [
+        { name: 'Shampoo', price: 400, type: 'VOLUME', tags: ['hair'] }, // Price per 1L
+        { name: 'Body Wash', price: 350, type: 'VOLUME', tags: ['body'] }
+    ]
 };
 
-const FILLER_TYPES = {
-    household: ['Detergent Powder', 'Dish Gel', 'Floor Cleaner', 'Toilet Cleaner', 'Paper Napkins'],
-    frozen: ['French Fries', 'Aloo Tikki', 'Green Peas', 'Sweet Corn', 'Veg Nuggets'],
-    meat: ['Chicken Curry Cut', 'Boneless Chicken', 'Mutton Chops', 'Fish Steaks', 'Prawns'],
-    snacks: ['Masala Chips', 'Cream Cookies', 'Bhujia Sev', 'Salted Peanuts', 'Choco Bar'],
-    beverages: ['Sparkling Water', 'Lemon Soda', 'Mango Drink', 'Apple Juice', 'Iced Tea'],
-    personal: ['Hair Shampoo', 'Face Wash', 'Body Lotion', 'Hand Wash', 'Toothpaste']
-};
-
+// --- 5. GENERATOR FUNCTION ---
 export const generateCatalog = () => {
     let catalog = [];
     let idCounter = 1000;
 
-    // Helper to get random image from category
     const getRandomImg = (cat) => {
         const pool = IMAGE_LIBRARY[cat] || IMAGE_LIBRARY['pantry'];
         return pool[Math.floor(Math.random() * pool.length)];
     };
 
-    // A. Generate Core Items
     Object.keys(BASE_ITEMS).forEach(cat => {
         BASE_ITEMS[cat].forEach(item => {
             const brands = BRANDS[cat] || ['Generic'];
             brands.forEach(brand => {
-                const useAdjective = Math.random() > 0.5;
-                const adjective = useAdjective ? ADJECTIVES[Math.floor(Math.random() * ADJECTIVES.length)] + ' ' : '';
-                const finalName = `${brand} ${adjective}${item.name}`;
-                const price = Math.floor(item.price * (Math.random() * 0.3 + 0.85));
+                
+                // Determine which set of variants to use (Weight vs Volume vs Unit)
+                const variantList = VARIANTS[item.type] || VARIANTS.UNIT;
 
-                catalog.push({
-                    id: idCounter++,
-                    name: finalName,
-                    baseName: item.name,
-                    brand: brand,
-                    category: cat,
-                    price: price,
-                    originalPrice: Math.floor(price * 1.2),
-                    unit: item.unit,
-                    image: getRandomImg(cat), // REAL IMAGE
-                    isVeg: !['meat', 'fish', 'egg'].some(x => (item.tags || []).includes(x)),
-                    tags: item.tags || [cat]
-                });
-            });
-        });
-    });
-
-    // B. Generate Filler Items
-    Object.keys(FILLER_TYPES).forEach(cat => {
-        FILLER_TYPES[cat].forEach(typeName => {
-            const brands = BRANDS[cat] || ['Generic'];
-            brands.forEach(brand => {
-                ['Small', 'Large'].forEach((variant, idx) => {
-                    const adjective = ADJECTIVES[Math.floor(Math.random() * ADJECTIVES.length)];
-                    const finalName = `${brand} ${adjective} ${typeName} (${variant})`;
-                    const basePrice = 50 + (idx * 40);
+                // Create a product SKU for EACH variant (250g, 500g, etc.)
+                variantList.forEach(variant => {
+                    const useAdjective = Math.random() > 0.5;
+                    const adjective = useAdjective ? ADJECTIVES[Math.floor(Math.random() * ADJECTIVES.length)] + ' ' : '';
                     
+                    // Final Name: "Amul Fresh Whole Milk (500ml)"
+                    const finalName = `${brand} ${adjective}${item.name} (${variant.label})`;
+                    
+                    // Calculate price based on the base price (usually per kg/L) * multiplier
+                    // e.g., 60 rs/L * 0.5 = 30 rs for 500ml
+                    let calculatedPrice = Math.floor(item.price * variant.multiplier);
+                    
+                    // Add slight randomization per brand
+                    calculatedPrice = Math.floor(calculatedPrice * (Math.random() * 0.2 + 0.9));
+
                     catalog.push({
                         id: idCounter++,
                         name: finalName,
-                        baseName: typeName,
+                        baseName: item.name,
                         brand: brand,
                         category: cat,
-                        price: basePrice,
-                        originalPrice: Math.floor(basePrice * 1.15),
-                        unit: idx === 0 ? 'Small' : 'Large',
-                        image: getRandomImg(cat), // REAL IMAGE
-                        isVeg: cat !== 'meat',
-                        tags: [cat, typeName.toLowerCase()]
+                        price: calculatedPrice,
+                        originalPrice: Math.floor(calculatedPrice * 1.2),
+                        unit: variant.label, // Storing "250g", "1L", etc.
+                        image: getRandomImg(cat),
+                        isVeg: !['meat', 'fish', 'egg'].some(x => (item.tags || []).includes(x)),
+                        tags: item.tags || [cat]
                     });
                 });
             });

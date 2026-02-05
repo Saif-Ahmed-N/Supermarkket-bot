@@ -142,6 +142,7 @@ export const RECIPES = [
 ];
 
 // --- 5. CATEGORY METADATA (Expanded to 10 Categories) ---
+
 export const CATEGORIES = [
   { id: 'dairy', label: 'Fresh Dairy', img: 'https://images.unsplash.com/photo-1628191010210-a59de33e5941?auto=format&fit=crop&w=500&q=80', aisle: 'Aisle 1' },
   { id: 'produce', label: 'Fresh Produce', img: 'https://images.unsplash.com/photo-1610832958506-aa56368176cf?auto=format&fit=crop&w=500&q=80', aisle: 'Aisle 2' },
