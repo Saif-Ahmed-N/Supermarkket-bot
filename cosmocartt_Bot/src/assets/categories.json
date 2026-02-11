@@ -1,0 +1,50 @@
+[
+    {
+        "name": "Baby Care",
+        "image": "https://images.unsplash.com/photo-1519689680058-324335c77eba?auto=format&fit=crop&w=400&q=80"
+    },
+    {
+        "name": "Bakery, Cakes & Dairy",
+        "image": "https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=400&q=80"
+    },
+    {
+        "name": "Beverages",
+        "image": "https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?auto=format&fit=crop&w=400&q=80"
+    },
+    {
+        "name": "Cleaning & Household",
+        "image": "http://localhost:8000/static/images/image2.png"
+    },
+    {
+        "name": "Beauty & Hygiene",
+        "image": "http://localhost:8000/static/images/beauty.jpg"
+    },
+    {
+        "name": "Foodgrains, Oil & Masala",
+        "image": "https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&w=400&q=80"
+    },
+    {
+        "name": "Fruits & Vegetables",
+        "image": "https://images.unsplash.com/photo-1610832958506-aa56368176cf?auto=format&fit=crop&w=400&q=80"
+    },
+    {
+        "name": "Gourmet & World Food",
+        "image": "https://images.unsplash.com/photo-1551462147-37885acc36f1?auto=format&fit=crop&w=400&q=80"
+    },
+    {
+        "name": "Kitchen, Garden & Pets",
+        "image": "http://localhost:8000/static/images/image1.jpg"
+    },
+    {
+        "name": "Snacks & Branded Foods",
+        "image": "https://images.unsplash.com/photo-1599490659213-e2b9527bd087?auto=format&fit=crop&w=400&q=80"
+    },
+    {
+        "name": "Eggs, Meat & Fish",
+        "image": "https://images.unsplash.com/photo-1569288052389-dac9b01c9c05?auto=format&fit=crop&w=400&q=80"
+    },
+    {
+        "name": "Kitchen Needs",
+        "image": "http://localhost:8000/static/images/image1.jpg"
+    }
+]

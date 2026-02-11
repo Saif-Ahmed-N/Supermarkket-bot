@@ -1,0 +1,32 @@
+# Dependencies
+node_modules/
+dist/
+build/
+.agent/
+
+# Python virtual environments
+venv/
+.venv/
+env/
+__pycache__/
+*.pyc
+
+# Environment files
+.env
+.env.local
+
+# Database
+*.db
+!cleaned_products_dataset.csv
+
+# Logs & Temporary
+*.log
+restoration_log.txt
+api_test_output.txt
+conversion_error.txt
+BEVERAGES_DEBUG_REPORT.md
+BEVERAGES_FIX_COMPLETE.md
+
+# OS files
+.DS_Store
+Thumbs.db
