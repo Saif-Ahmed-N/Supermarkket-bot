@@ -1,6 +1,8 @@
-// ROBUST ENVIRONMENT DETECTION
-const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-export const BASE_URL = isLocal ? 'http://localhost:8000' : '';
+export const BASE_URL = import.meta.env.VITE_API_URL || (
+    (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+        ? 'http://localhost:8000'
+        : ''
+);
 
 // Helper to map Backend DB structure to Frontend structure
 const mapProduct = (p) => ({
