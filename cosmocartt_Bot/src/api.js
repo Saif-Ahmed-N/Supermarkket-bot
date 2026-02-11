@@ -1,5 +1,4 @@
 // ROBUST ENVIRONMENT DETECTION
-// If we are on a live domain (not localhost), force relative path to use Netlify Functions
 const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
 export const BASE_URL = isLocal ? 'http://localhost:8000' : '';
 

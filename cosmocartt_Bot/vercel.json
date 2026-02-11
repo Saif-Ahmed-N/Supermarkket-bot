@@ -1,48 +1,48 @@
 {
     "rewrites": [
         {
-            "source": "/api/chat",
-            "destination": "/backend/main.py"
-        },
-        {
-            "source": "/send-otp",
-            "destination": "/backend/main.py"
-        },
-        {
-            "source": "/verify-otp",
-            "destination": "/backend/main.py"
+            "source": "/api/(.*)",
+            "destination": "/api/index.py"
         },
         {
             "source": "/products(.*)",
-            "destination": "/backend/main.py"
+            "destination": "/api/index.py"
         },
         {
             "source": "/categories",
-            "destination": "/backend/main.py"
+            "destination": "/api/index.py"
         },
         {
             "source": "/subcategories",
-            "destination": "/backend/main.py"
+            "destination": "/api/index.py"
         },
         {
             "source": "/orders(.*)",
-            "destination": "/backend/main.py"
+            "destination": "/api/index.py"
         },
         {
             "source": "/cart(.*)",
-            "destination": "/backend/main.py"
+            "destination": "/api/index.py"
+        },
+        {
+            "source": "/send-otp",
+            "destination": "/api/index.py"
+        },
+        {
+            "source": "/verify-otp",
+            "destination": "/api/index.py"
         },
         {
             "source": "/static/(.*)",
-            "destination": "/backend/main.py"
+            "destination": "/api/index.py"
         },
         {
             "source": "/docs",
-            "destination": "/backend/main.py"
+            "destination": "/api/index.py"
         },
         {
             "source": "/openapi.json",
-            "destination": "/backend/main.py"
+            "destination": "/api/index.py"
         },
         {
             "source": "/(.*)",
