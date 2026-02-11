@@ -4,6 +4,8 @@ export const BASE_URL = import.meta.env.VITE_API_URL || (
         : ''
 );
 
+console.log("🚀 API BASE URL:", BASE_URL); // Debugging
+
 // Helper to map Backend DB structure to Frontend structure
 const mapProduct = (p) => ({
     id: p.index,
