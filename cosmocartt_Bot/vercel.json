@@ -1,0 +1,52 @@
+{
+    "rewrites": [
+        {
+            "source": "/api/chat",
+            "destination": "/backend/main.py"
+        },
+        {
+            "source": "/send-otp",
+            "destination": "/backend/main.py"
+        },
+        {
+            "source": "/verify-otp",
+            "destination": "/backend/main.py"
+        },
+        {
+            "source": "/products(.*)",
+            "destination": "/backend/main.py"
+        },
+        {
+            "source": "/categories",
+            "destination": "/backend/main.py"
+        },
+        {
+            "source": "/subcategories",
+            "destination": "/backend/main.py"
+        },
+        {
+            "source": "/orders(.*)",
+            "destination": "/backend/main.py"
+        },
+        {
+            "source": "/cart(.*)",
+            "destination": "/backend/main.py"
+        },
+        {
+            "source": "/static/(.*)",
+            "destination": "/backend/main.py"
+        },
+        {
+            "source": "/docs",
+            "destination": "/backend/main.py"
+        },
+        {
+            "source": "/openapi.json",
+            "destination": "/backend/main.py"
+        },
+        {
+            "source": "/(.*)",
+            "destination": "/index.html"
+        }
+    ]
+}
