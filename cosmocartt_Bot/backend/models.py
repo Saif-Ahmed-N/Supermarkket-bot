@@ -75,3 +75,12 @@ class CartItem(Base):
     price = Column(Float)
     weight = Column(String)
     image_url = Column(String)
+
+class OTP(Base):
+    __tablename__ = "otps"
+
+    id = Column(Integer, primary_key=True, index=True)
+    mobile_number = Column(String, index=True)
+    otp_code = Column(String)
+    created_at = Column(DateTime, default=datetime.datetime.utcnow)
+

@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, useRef } from 'react';
+import { BASE_URL } from '../api';
 // import { PRODUCT_DB, DAILY_ESSENTIALS } from '../data/mockData'; // MOCK DATA REMOVED
 
 const CartContext = createContext();
@@ -53,7 +54,7 @@ export const CartProvider = ({ children, userId }) => {
     if (userId) {
       const fetchCart = async () => {
         try {
-          const response = await fetch(`http://localhost:8000/cart/${userId}`);
+          const response = await fetch(`${BASE_URL}/cart/${userId}`);
           if (response.ok) {
             const data = await response.json();
             // Transform backend keys to frontend if necessary (they are same here)
@@ -83,7 +84,7 @@ export const CartProvider = ({ children, userId }) => {
       // Debounce sync slightly to avoid too many requests
       const timeout = setTimeout(async () => {
         try {
-          await fetch('http://localhost:8000/cart', {
+          await fetch(`${BASE_URL}/cart`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({

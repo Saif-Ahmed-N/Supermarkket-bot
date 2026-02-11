@@ -26,8 +26,8 @@ app.add_middleware(
 from fastapi.staticfiles import StaticFiles
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
-# In-memory storage for OTPs
-otp_storage = {}
+# In-memory storage replaced by DB
+# otp_storage = {}
 
 class LoginRequest(BaseModel):
     mobile_number: str
@@ -42,12 +42,17 @@ def read_root():
     return {"message": "Welcome to Supermarket Bot API"}
 
 @app.post("/send-otp")
-def send_otp(request: LoginRequest):
+def send_otp(request: LoginRequest, db: Session = Depends(database.get_db)):
     # 1. Generate 4 digit code
     otp = str(random.randint(1000, 9999))
     
-    # 2. Store it
-    otp_storage[request.mobile_number] = otp
+    # 2. Store it in DB (Stateless for Vercel)
+    # Clear old OTPs for this number
+    db.query(models.OTP).filter(models.OTP.mobile_number == request.mobile_number).delete()
+    
+    new_otp = models.OTP(mobile_number=request.mobile_number, otp_code=otp)
+    db.add(new_otp)
+    db.commit()
     
     # 3. THE "CONSOLE LOG" TRICK
     print("\n" + "="*30)
@@ -59,10 +64,14 @@ def send_otp(request: LoginRequest):
 
 @app.post("/verify-otp")
 def verify_otp(request: VerifyRequest, db: Session = Depends(database.get_db)):
-    stored_otp = otp_storage.get(request.mobile_number)
+    # Check DB for OTP
+    otp_record = db.query(models.OTP).filter(
+        models.OTP.mobile_number == request.mobile_number,
+        models.OTP.otp_code == request.otp
+    ).first()
     
-    if stored_otp and stored_otp == request.otp:
-        otp_storage.pop(request.mobile_number, None) # Clear after use
+    if otp_record:
+        db.delete(otp_record) # Clear after use
         
         # PERSIST USER TO DATABASE
         db_user = db.query(models.User).filter(models.User.mobile_number == request.mobile_number).first()
